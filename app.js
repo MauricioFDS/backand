@@ -1,12 +1,17 @@
 const express = require("express");
+const cors = require('cors');  // Importa o módulo cors
 const bodyParser = require("body-parser");
 const produtosRoutes = require("./routerProdutos.js");
 const usuariosRoutes = require("./routerUsuarios.js");
 
 
-const port = 3306;
 const path = require("path");
 const app = express();
+app.use(cors());
+
+const port = process.env.PORT || 3000;  // Porta fornecida pelo host ou 3000
+const host = '0.0.0.0';  // Aceitar conexões de qualquer lugar
+
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
@@ -22,23 +27,15 @@ app.get("/produto/lista", function (req, res) {
   );
 });
 
-app.get("/produto", function (req, res) {
+app.get("/usuarios/produto", function (req, res) {
   res.sendFile(path.join(__dirname, "..", "frontend", "pages", "produto"));
 });
-
-
-// // ENDEREÇO DAS PÁGINAS DE LOGIN
-// app.get("/login", function (req, res) {
-//   res.sendFile(
-//     path.join(__dirname, "..", "frontend", "pages", "login")
-//   );
-// });
 
 
 // Rotas de produtos
 app.use("/produtos", produtosRoutes);
 app.use("/usuarios", usuariosRoutes);
 
-app.listen(port, () => {
+app.listen(port, host, () => {
   console.log(`Servidor rodando na porta: ${port}`);
 });
